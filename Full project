@@ -1,0 +1,63 @@
+########## Preparation ###############
+
+# checking if virtualization is supported
+
+grep -E "vmx'|nx" /proc/cpuinfo
+
+lscpu |grep virtualization
+
+sudo lscpu | grep virtualization
+
+#update repository
+
+yum mudule list virt
+
+#install libvirt and Qemu
+
+yum module install virt -y
+
+#check if the host is configured correctly for libvirt
+
+virt-host validate
+
+#install virtual machine manager
+
+yum install virt-manager virt-install virt-viewer -y
+
+#check and enable nested virtualization
+
+cat /sys/module/kvm_intel/parameters/nested ( for intel system)
+
+# if the output is 1 , skip the following steps , if the outcome is 0 process 
+
+#unload the kvm_intel module:
+
+sudo modprob -r kvm_intel
+
+#Activate the nesting feature
+
+sudo modprob kvm_intel nested=1
+
+#make the changes permanent upon reboot edit below the file below and uncomment 
+options kvm-and nested=1##
+
+vi /etc/modprobe.d/kvm.conf
+
+######### creating virtual machine in the prepared VM ###########
+# creating the first virtual machine
+
+virt-install --name worker01 --memory2048 --vcpus 2 --disk size =100 --os-variant ubuntu20.04_its --cdrom/home/username
+Downloads/ubuntu20.04.4 amd.iso
+
+#virtual machine 2
+virt-install --name worker02 --memory 2048 vcpus --disk size 100 --os-variant centos7 --cdrom/home/username/Dowmloads/centos-7-86_64-DVD-2009.iso
+
+#virtual machine 3
+virt-install --name worker01 --memory 2048 vcpus --disk size 100 --os-variant windows server 2019 --cdrom/home/username/Dowmloads/centos-7-86_64-DVD-2019.iso
+
+
+  
+
+
+
+
